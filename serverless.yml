@@ -1,0 +1,25 @@
+service: mpls-garbage-calendar
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  logRetentionInDays: 14
+
+package:
+  patterns:
+    - '!node_modules/**'
+    - '!tests/**'
+
+functions:
+  handle_schedule:
+    handler: mpls_garbage_calendar/handler.handler
+    events:
+      - httpApi:
+          method: GET
+          path: /{schedule_day}
+
+
+plugins:
+  - serverless-python-requirements

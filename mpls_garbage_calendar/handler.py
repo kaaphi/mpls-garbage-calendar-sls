@@ -1,55 +1,37 @@
-import datetime
+import base64
 import logging
-import re
-import uuid
-from typing import Optional
+import os
 
 import feedparser
-from icalendar import Event, Calendar
+
+from mpls_garbage_calendar import feed_parsing
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+CALENDAR_RSS_FORMAT_STRING = os.environ.get(
+    'FEED_URL_FORMAT',
+    'http://apps.ci.minneapolis.mn.us/CalendarApp/Ex_CalendarRSS.aspx?linkurl=http://www.ci.minneapolis.mn.us/government/calendars.asp&datebook=Garbage%20and%20Recycling%20{}%20Route%20ABE&type=rss'
+)
+
 
 def handler(event, context):
     logger.info(event)
-    logger.info(context)
 
-    return {}
+    schedule_day = event['pathParameters']['schedule_day']
 
+    feed_url = CALENDAR_RSS_FORMAT_STRING.format(schedule_day)
+    logger.info('Feed URL: %s', feed_url)
 
-def parse_feed(feed: feedparser.FeedParserDict):
-    cal = Calendar()
+    feed = feedparser.parse(feed_url)
+    calendar = feed_parsing.parse_feed(feed)
 
-    for e in filter(None, map(parse_entry, feed.entries)):
-        cal.add_component(e)
+    logger.info(calendar)
 
-    return cal
+    return {
+        "isBase64Encoded": True,
+        "statusCode": 200,
+        "headers": { "content-type": "text/calendar" },
+        "body": base64.b64encode(calendar.to_ical())
+    }
 
-
-def parse_entry(entry: dict) -> Optional[Event]:
-    event_type = get_type(entry.title)
-    if not event_type:
-        return None
-
-    published = entry.published_parsed
-    start_date = datetime.date(published.tm_year, published.tm_mon, published.tm_mday)
-    end_date = start_date + datetime.timedelta(days=1)
-
-    event = Event()
-    event.add('uid', uuid.uuid4())
-    event.add('summary', event_type)
-    event.add('dtstart', start_date)
-    event.add('dtend', end_date)
-
-    return event
-
-
-def get_type(title: str) -> Optional[str]:
-    return next(
-        filter(None,
-               map(
-                   lambda event_type: event_type if re.search(event_type, title, re.IGNORECASE) else None,
-                   ['Garbage', 'Recycling']
-               )),
-        None)

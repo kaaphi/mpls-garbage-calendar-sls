@@ -1,6 +1,6 @@
 import feedparser
 import pytest
-from mpls_garbage_calendar import handler
+from mpls_garbage_calendar import feed_parsing
 
 
 @pytest.mark.parametrize("test_input,expected", [
@@ -9,13 +9,16 @@ from mpls_garbage_calendar import handler
     ('Recycling Day 6/10/22 6:00 AM', 'Recycling')
 ])
 def test_get_type(test_input, expected):
-    assert handler.get_type(test_input) == expected
+    assert feed_parsing.get_type(test_input) == expected
 
 
 def test_parse():
-    cal = handler.parse_feed(feedparser.parse(r'./Ex_CalendarRSS.aspx.xml'))
+    cal = feed_parsing.parse_feed(feedparser.parse(r'./Ex_CalendarRSS.aspx.xml'))
 
-    assert len(cal.subcomponents) == 6
+    assert len(cal.subcomponents) == 4
     assert cal.subcomponents[0]['SUMMARY'] == 'Garbage'
     assert cal.subcomponents[0]['DTSTART'].to_ical() == b'20220604'
     assert cal.subcomponents[0]['DTEND'].to_ical() == b'20220605'
+    assert cal.subcomponents[1]['SUMMARY'] == 'Garbage, Recycling'
+    assert cal.subcomponents[1]['DTSTART'].to_ical() == b'20220610'
+    assert cal.subcomponents[1]['DTEND'].to_ical() == b'20220611'
