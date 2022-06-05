@@ -16,7 +16,7 @@ provider:
 custom:
   customDomain:
     domainName: ${param:domain}
-    basePath: mpls-garbage-calendar
+    basePath: mpls-garbage
     apiType: http
     endpointType: regional
 
