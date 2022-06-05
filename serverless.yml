@@ -2,10 +2,23 @@ service: mpls-garbage-calendar
 
 frameworkVersion: '3'
 
+params:
+  default:
+    domain: ${sls:stage}.${param:rootDomain}
+  prod:
+    domain: ${param:rootDomain}
+
 provider:
   name: aws
   runtime: python3.9
   logRetentionInDays: 14
+
+custom:
+  customDomain:
+    domainName: ${param:domain}
+    basePath: mpls-garbage-calendar
+    apiType: http
+    endpointType: regional
 
 package:
   patterns:
@@ -23,3 +36,4 @@ functions:
 
 plugins:
   - serverless-python-requirements
+  - serverless-domain-manager
