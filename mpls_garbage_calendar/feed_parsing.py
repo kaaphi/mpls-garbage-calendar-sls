@@ -47,8 +47,8 @@ def parse_entry(entry: dict) -> Optional[dict]:
         return None
 
     event_label = {
-        'Garbage': '\U00015FD1',
-        'Recycling': '\U0000267B'
+        'Garbage': '\U0001F5D1\ufe0f',
+        'Recycling': '\U0000267B\ufe0f'
     }[event_type]
 
     published = entry.published_parsed

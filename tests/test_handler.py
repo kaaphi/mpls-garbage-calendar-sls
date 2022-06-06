@@ -16,11 +16,11 @@ def test_parse():
     cal = feed_parsing.parse_feed(feedparser.parse(r'./Ex_CalendarRSS.aspx.xml'))
 
     assert len(cal.subcomponents) == 4
-    assert cal.subcomponents[0]['SUMMARY'] == '\U00015FD1'
+    assert cal.subcomponents[0]['SUMMARY'] == '\U0001F5D1\ufe0f'
     assert cal.subcomponents[0]['DESCRIPTION'] == 'Garbage'
     assert cal.subcomponents[0]['DTSTART'].to_ical() == b'20220604'
     assert cal.subcomponents[0]['DTEND'].to_ical() == b'20220605'
-    assert cal.subcomponents[1]['SUMMARY'] == '\U0000267B \U00015FD1'
+    assert cal.subcomponents[1]['SUMMARY'] == '\U0000267B\ufe0f \U0001F5D1\ufe0f'
     assert cal.subcomponents[1]['DESCRIPTION'] == 'Recycling, Garbage'
     assert cal.subcomponents[1]['DTSTART'].to_ical() == b'20220610'
     assert cal.subcomponents[1]['DTEND'].to_ical() == b'20220611'
