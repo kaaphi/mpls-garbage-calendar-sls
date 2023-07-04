@@ -13,7 +13,7 @@ def test_get_type(test_input, expected):
 
 
 def test_parse():
-    cal = feed_parsing.parse_feed(feedparser.parse(r'./Ex_CalendarRSS.aspx.xml'))
+    cal = feed_parsing.parse_feed(feedparser.parse(r'Ex_CalendarRSS.aspx.xml'))
 
     assert len(cal.subcomponents) == 4
     assert cal.subcomponents[0]['SUMMARY'] == '\U0001F5D1\ufe0f'
