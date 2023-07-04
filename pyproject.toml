@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "mpls-garbage-calendar-cdk"
+version = "0.1.0"
+description = ""
+authors = ["phil kaasa <phil@kaaphi.com>"]
+
+[tool.poetry.dependencies]
+python = "~3.9"
+aws-cdk-lib = "^2.87.0"
+constructs = "^10.2.69"
+"aws-cdk.aws-lambda-python-alpha" = "2.87.0a0"
+"aws_cdk.aws_apigatewayv2_alpha" = "2.87.0a0"
+"aws_cdk.aws_apigatewayv2_integrations_alpha" = "2.87.0a0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.4.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

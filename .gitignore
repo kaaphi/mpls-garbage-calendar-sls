@@ -17,10 +17,3 @@ var/
 .installed.cfg
 *.egg
 .pytest_cache
-
-# Serverless directories
-.serverless
-
-node_modules
-package.json
-package-lock.json
